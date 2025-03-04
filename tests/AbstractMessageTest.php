@@ -2,6 +2,7 @@
 
 use App\Implementation\AbstractMessage;
 use App\Implementation\Request;
+use App\Interfaces\StreamInterface;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -216,5 +217,15 @@ class AbstractMessageTest extends TestCase
         $request2 = $request->withoutHeader('test');
         $this->assertArrayHasKey('test',$request->getHeaders());
         $this->assertArrayNotHasKey('test', $request2->getHeaders());
+    }
+
+    public function testGetBody()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $body = $this->createMock(StreamInterface::class);
+        $request->setBody($body);
+        $this->assertInstanceOf(StreamInterface::class, $request->getBody());
     }
 }

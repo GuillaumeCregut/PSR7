@@ -1,13 +1,22 @@
 <?php
+/**
+ * A class that implements the minimal informations required by MessageInterface 
+ * from PSR7
+ * 
+ * in addition with MessageTrait, should be used to implement Request and Response
+ * 
+ */
 
 namespace App\Implementation;
 
+use App\Interfaces\StreamInterface;
 use App\Interfaces\MessageInterface;
 
 abstract class AbstractMessage implements MessageInterface
 {
     protected array $headers = [];
     protected string $protocolVersion = '';
+    protected StreamInterface $body;
 
     public function getProtocolVersion(): string
     {
@@ -45,6 +54,11 @@ abstract class AbstractMessage implements MessageInterface
         }
         return implode(',', $this->headers[$key]);
     }
+
+    public function getBody(): StreamInterface
+    {
+        return $this->body;
+    } 
 
     protected function setHeaders(array $headers): static
     {
@@ -112,5 +126,10 @@ abstract class AbstractMessage implements MessageInterface
         if (null !== $key) {
             unset($this->headers[$name]);
         }
+    }
+
+    protected function changeBody(StreamInterface $body): void
+    {
+        $this->body = $body;
     }
 }

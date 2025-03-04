@@ -1,8 +1,14 @@
 <?php
+/**
+ * Traits used to match whith PSR7 MessageInterfaces in addition with AbstractMessage.
+ * Should be used in Request and Responses implementations
+ * 
+ */
 
 namespace App\Implementation;
 
 use InvalidArgumentException;
+use App\Interfaces\StreamInterface;
 
 trait MessageTrait
 {
@@ -49,6 +55,13 @@ trait MessageTrait
     {
         $newMessage = clone $this;
         $newMessage->removeKey($name);
+        return $newMessage;
+    }
+
+    public function withBody(StreamInterface $body) : static
+    {
+        $newMessage = clone $this;
+        $newMessage->changeBody($body);
         return $newMessage;
     }
 }

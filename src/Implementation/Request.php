@@ -4,7 +4,7 @@ namespace App\Implementation;
 
 use InvalidArgumentException;
 use App\Interfaces\RequestInterface;
-
+use App\Interfaces\StreamInterface;
 
 class Request extends AbstractMessage implements RequestInterface
 {
@@ -32,5 +32,10 @@ class Request extends AbstractMessage implements RequestInterface
             }
         }
         throw new InvalidArgumentException('Protocol version error');
+    }
+
+    public function setBody(StreamInterface $body)
+    {
+        $this->body = $body;
     }
 }
