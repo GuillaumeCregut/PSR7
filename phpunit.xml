@@ -31,12 +31,11 @@
           pathCoverage="false"
           ignoreDeprecatedCodeUnits="true"
           disableCodeCoverageIgnore="true">
-
-
         <report>
-            <html outputDirectory="html-coverage" lowUpperBound="50" highLowerBound="90"/>
-            <php outputFile="coverage.php"/>
+            <html outputDirectory="reports/html-coverage" lowUpperBound="50" highLowerBound="90"/>
         </report>
     </coverage>
-
+    <logging>
+        <testdoxHtml outputFile="reports/testdox.html"/>
+    </logging>
 </phpunit>
