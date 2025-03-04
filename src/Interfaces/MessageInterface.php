@@ -157,7 +157,7 @@ interface MessageInterface
      *
      * @return StreamInterface Returns the body as a stream.
      */
-//    public function getBody();
+    public function getBody(): StreamInterface;
 
     /**
      * Return an instance with the specified message body.
@@ -172,6 +172,6 @@ interface MessageInterface
      * @return static
      * @throws \InvalidArgumentException When the body is not valid.
      */
-//    public function withBody(StreamInterface $body);
+    public function withBody(StreamInterface $body) : static;
 
 }
