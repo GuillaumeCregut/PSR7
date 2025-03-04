@@ -86,4 +86,31 @@ abstract class AbstractMessage implements MessageInterface
         }
         return true;
     }
+
+    protected function setHeader(string $name, array $value): void
+    {
+        $key = $this->getHeaderKey($name);
+        if(null === $key) {
+            $key = $name;
+        }
+        $this->headers[$key] = $value;
+    }
+
+    protected function appendKey(string $name, array $value): void
+    {
+        $key = $this->getHeaderKey($name);
+        if(null === $key) {
+            $this->headers[$name] = $value;
+        } else {
+            $this->headers[$key] = array_merge($this->headers[$key],$value);
+        }
+    }
+
+    protected function removeKey(string $name) : void
+    {
+        $key = $this->getHeaderKey($name);
+        if (null !== $key) {
+            unset($this->headers[$name]);
+        }
+    }
 }

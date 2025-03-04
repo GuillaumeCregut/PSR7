@@ -117,7 +117,7 @@ interface MessageInterface
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-//    public function withHeader($name, $value);
+    public function withHeader(string $name, string | array $value): static;
 
     /**
      * Return an instance with the specified header appended with the given value.
@@ -136,7 +136,7 @@ interface MessageInterface
      * @throws \InvalidArgumentException for invalid header names.
      * @throws \InvalidArgumentException for invalid header values.
      */
-//    public function withAddedHeader($name, $value);
+    public function withAddedHeader(string $name, string|array $value): static;
 
     /**
      * Return an instance without the specified header.
@@ -150,7 +150,7 @@ interface MessageInterface
      * @param string $name Case-insensitive header field name to remove.
      * @return static
      */
-//    public function withoutHeader($name);
+    public function withoutHeader(string $name): static;
 
     /**
      * Gets the body of the message.

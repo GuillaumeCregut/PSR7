@@ -129,4 +129,92 @@ class AbstractMessageTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $request2 = $request->withProtocolVersion('1.3');
     }
+
+    public function testWithHeaderBadKey()
+    {
+        $headers['test']=array('valeur1', 'valeur2');
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $badKey1 = "Hello\0world";
+        $this->expectException(InvalidArgumentException::class);
+        $request->withHeader($badKey1, 'Bonjour');
+    }
+
+    public function testWithHeaderBadValue()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $this->expectException(InvalidArgumentException::class);
+        $request->withHeader('toto', "Bon\0jour");
+    }
+
+    public function testWithHeaderNewKey()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request2 = $request->withHeader('toto', "Bonjour");
+        $this->assertEquals("Bonjour",$request2->getHeaderLine('toto'));
+        $this->assertEquals("",$request->getHeaderLine('toto'));
+    }
+
+    public function testWithHeaderNewKeyArrayValues()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request2 = $request->withHeader('toto', array("Bonjour", 'monde'));
+        $this->assertEquals("Bonjour,monde",$request2->getHeaderLine('toto'));
+        $this->assertEquals("",$request->getHeaderLine('toto'));
+    }
+
+    public function testwithAddedHeaderBadKey()
+    {
+        $headers['test']=array('valeur1', 'valeur2');
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $badKey1 = "Hello\0world";
+        $this->expectException(InvalidArgumentException::class);
+        $request->withAddedHeader($badKey1, 'Bonjour');
+    }
+
+    public function testwithAddedHeaderBadValue()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $this->expectException(InvalidArgumentException::class);
+        $request->withAddedHeader('toto', "Bon\0jour");
+    }
+
+    public function testWithAddedHeaderSimpleValueAdded()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request2 = $request->withAddedHeader('toto', "Bonjour");
+        $this->assertArrayHasKey('toto',$request2->getHeaders());
+        $this->assertArrayNotHasKey('toto', $request->getHeaders());
+    }
+
+    public function testWithAddedHeaderSimpleValueppend()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request2 = $request->withAddedHeader('test', "Bonjour");
+        $this->assertEquals('valeur1,valeur2,Bonjour',$request2->getHeaderLine('test'));
+        $this->assertArrayNotHasKey('toto', $request->getHeaders());
+    }
+
+    public function testwithoutHeader()
+    {
+        $headers['test']=array('valeur1', "valeur2");
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request2 = $request->withoutHeader('test');
+        $this->assertArrayHasKey('test',$request->getHeaders());
+        $this->assertArrayNotHasKey('test', $request2->getHeaders());
+    }
 }
