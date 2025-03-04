@@ -8,6 +8,7 @@ use App\Interfaces\RequestInterface;
 
 class Request extends AbstractMessage implements RequestInterface
 {
+    use MessageTrait;
    
     public function __construct(array $headers)
     {
@@ -31,12 +32,5 @@ class Request extends AbstractMessage implements RequestInterface
             }
         }
         throw new InvalidArgumentException('Protocol version error');
-    }
-
-    public function withProtocolVersion(string $version): static
-    {
-        $newRequest = clone $this;
-        $newRequest->setProtocolVersion($version);
-        return $newRequest;
     }
 }
