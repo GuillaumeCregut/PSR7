@@ -11,7 +11,7 @@ interface MessageInterface
      *
      * @return string HTTP protocol version.
      */
- //   public function getProtocolVersion();
+    public function getProtocolVersion();
 
     /**
      * Return an instance with the specified HTTP protocol version.
@@ -26,7 +26,7 @@ interface MessageInterface
      * @param string $version HTTP protocol version
      * @return static
      */
-//    public function withProtocolVersion($version);
+    public function withProtocolVersion(string $version): static;
 
     /**
      * Retrieves all message header values.
@@ -53,7 +53,7 @@ interface MessageInterface
      *     Each key MUST be a header name, and each value MUST be an array of
      *     strings for that header.
      */
-    public function getHeaders(): array;
+     public function getHeaders(): array;
 
     /**
      * Checks if a header exists by the given case-insensitive name.
@@ -100,7 +100,7 @@ interface MessageInterface
      *    concatenated together using a comma. If the header does not appear in
      *    the message, this method MUST return an empty string.
      */
-//    public function getHeaderLine($name);
+    public function getHeaderLine(string $name): string;
 
     /**
      * Return an instance with the provided value replacing the specified header.

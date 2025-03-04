@@ -8,7 +8,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Request::class)]
 class AbstractMessageTest extends TestCase
 {
-    /* Nécessite une implémentation plus poussée du setting des headers */
+    public function testGetProtocolVersion()
+    {
+        $request = new Request([]);
+        $request->setProtocolVersion('1.0');
+        $this->assertEquals('1.0',$request->getProtocolVersion());
+        $request->setProtocolVersion('HTTP/1.0');
+        $this->assertEquals('1.0',$request->getProtocolVersion());
+        $this->expectException(InvalidArgumentException::class);
+        $request->setProtocolVersion('sdsqTP/1.0');
+        
+    }
+
     public function testGetHeaders()
     {
         $request = new Request([]);
@@ -86,5 +97,36 @@ class AbstractMessageTest extends TestCase
         $this->assertArrayNotHasKey($badKey2,$request->getHeaders());
         $this->assertArrayNotHasKey($badKey3,$request->getHeaders());
         $this->assertArrayHasKey($goodKey, $request->getHeaders());
+    }
+
+    public function testGetHeaderLine()
+    {
+        $headers['test']=array('valeur1', 'valeur2');
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $this->assertEquals('', $request->getHeaderLine('none'));
+        $this->assertEquals('valeur1,valeur2', $request->getHeaderLine('test'));
+    }
+
+    public function testWithProtocol()
+    {
+        $headers['test']=array('valeur1', 'valeur2');
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request->setProtocolVersion('1.0');
+        $request2 = $request->withProtocolVersion('1.1');
+        $this->assertEquals('1.1', $request2->getProtocolVersion());
+        $this->assertEquals('1.0', $request->getProtocolVersion());
+        $this->assertEquals($request->getHeaders(), $request2->getHeaders());
+    }
+
+    public function testWithProtocolError()
+    {
+        $headers['test']=array('valeur1', 'valeur2');
+        $headers['titi']=array('valeur3', 'valeur4');
+        $request = new Request($headers);
+        $request->setProtocolVersion('1.0');
+        $this->expectException(InvalidArgumentException::class);
+        $request2 = $request->withProtocolVersion('1.3');
     }
 }
