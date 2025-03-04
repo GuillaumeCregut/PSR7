@@ -6,7 +6,13 @@ use App\Interfaces\MessageInterface;
 
 abstract class AbstractMessage implements MessageInterface
 {
-    protected array $headers =[];
+    protected array $headers = [];
+    protected string $protocolVersion = '';
+
+    public function getProtocolVersion(): string
+    {
+        return $this->protocolVersion;
+    }
     
     public function getHeaders(): array
     {
@@ -31,6 +37,15 @@ abstract class AbstractMessage implements MessageInterface
         return $this->headers[$key];
     }
 
+    public function getHeaderLine(string $name): string
+    {
+        $key=$this->getHeaderKey($name);
+        if(is_null($key)) {
+            return '';
+        }
+        return implode(',', $this->headers[$key]);
+    }
+
     protected function setHeaders(array $headers): static
     {
         foreach($headers as $key=>$value) {
@@ -43,7 +58,7 @@ abstract class AbstractMessage implements MessageInterface
         return $this;
     }
 
-    private function getHeaderKey(string $name): string | null
+    protected function getHeaderKey(string $name): string | null
     {
         $result = array_find_key($this->headers, function(array $value, string $key) use ($name) {
             return strtoupper($name) === strtoupper($key);
@@ -51,7 +66,7 @@ abstract class AbstractMessage implements MessageInterface
         return $result;
     }
 
-    private function testKey(string $key): bool
+    protected function testKey(string $key): bool
     {
         for ($i = 0; $i < strlen($key); $i++) {
             if (ord($key[$i]) <= 0x20) {
@@ -61,7 +76,7 @@ abstract class AbstractMessage implements MessageInterface
         return true;
     }
 
-    private function testValue(array $values): bool
+    protected function testValue(array $values): bool
     {
         foreach($values as $value) {
             if((str_contains($value, "\0") || str_contains($value, "\r") || str_contains($value, "\n")))
