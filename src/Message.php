@@ -14,12 +14,7 @@ class Message extends AbstractMessage
 {
     use MessageTrait;
 
-    public function __construct(array $headers)
-    {
-        //During construction, implementations MUST attempt to set the Host header from
-        // a provided URI if no Host header is provided.
-        $this->setHeaders($headers);
-    }
+    
 
     public function setProtocolVersion(string $protocol): void
     {
