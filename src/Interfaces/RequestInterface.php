@@ -40,7 +40,7 @@ interface RequestInterface extends MessageInterface
      *
      * @return string
      */
-//    public function getRequestTarget();
+    public function getRequestTarget(): string;
 
     /**
      * Return an instance with the specific request-target.
