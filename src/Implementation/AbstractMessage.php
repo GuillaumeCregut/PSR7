@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A class that implements the minimal informations required by MessageInterface 
  * from PSR7
@@ -18,11 +19,16 @@ abstract class AbstractMessage implements MessageInterface
     protected string $protocolVersion = '';
     protected StreamInterface $body;
 
+    public function __construct(array $headers)
+    {
+        $this->setHeaders($headers);
+    }
+
     public function getProtocolVersion(): string
     {
         return $this->protocolVersion;
     }
-    
+
     public function getHeaders(): array
     {
         return $this->headers;
@@ -30,7 +36,7 @@ abstract class AbstractMessage implements MessageInterface
 
     public function hasHeader(string $name): bool
     {
-        if (count($this->headers)===0) {
+        if (count($this->headers) === 0) {
             return false;
         }
         $result = $this->getHeaderKey($name);
@@ -39,8 +45,8 @@ abstract class AbstractMessage implements MessageInterface
 
     public function getHeader(string $name): array
     {
-        $key=$this->getHeaderKey($name);
-        if(is_null($key)) {
+        $key = $this->getHeaderKey($name);
+        if (is_null($key)) {
             return [];
         }
         return $this->headers[$key];
@@ -48,8 +54,8 @@ abstract class AbstractMessage implements MessageInterface
 
     public function getHeaderLine(string $name): string
     {
-        $key=$this->getHeaderKey($name);
-        if(is_null($key)) {
+        $key = $this->getHeaderKey($name);
+        if (is_null($key)) {
             return '';
         }
         return implode(',', $this->headers[$key]);
@@ -58,14 +64,14 @@ abstract class AbstractMessage implements MessageInterface
     public function getBody(): StreamInterface
     {
         return $this->body;
-    } 
+    }
 
     protected function setHeaders(array $headers): static
     {
-        foreach($headers as $key=>$value) {
+        foreach ($headers as $key => $value) {
             if ($this->testKey($key)) {
-                if($this->testValue($value)) {
-                    $this->headers[$key]=$value;
+                if ($this->testValue($value)) {
+                    $this->headers[$key] = $value;
                 }
             }
         }
@@ -74,7 +80,7 @@ abstract class AbstractMessage implements MessageInterface
 
     protected function getHeaderKey(string $name): string | null
     {
-        $result = array_find_key($this->headers, function(array $value, string $key) use ($name) {
+        $result = array_find_key($this->headers, function (array $value, string $key) use ($name) {
             return strtoupper($name) === strtoupper($key);
         });
         return $result;
@@ -84,7 +90,7 @@ abstract class AbstractMessage implements MessageInterface
     {
         for ($i = 0; $i < strlen($key); $i++) {
             if (ord($key[$i]) <= 0x20) {
-                return false; 
+                return false;
             }
         }
         return true;
@@ -92,9 +98,8 @@ abstract class AbstractMessage implements MessageInterface
 
     protected function testValue(array $values): bool
     {
-        foreach($values as $value) {
-            if((str_contains($value, "\0") || str_contains($value, "\r") || str_contains($value, "\n")))
-            {
+        foreach ($values as $value) {
+            if ((str_contains($value, "\0") || str_contains($value, "\r") || str_contains($value, "\n"))) {
                 return false;
             }
         }
@@ -104,7 +109,7 @@ abstract class AbstractMessage implements MessageInterface
     protected function setHeader(string $name, array $value): void
     {
         $key = $this->getHeaderKey($name);
-        if(null === $key) {
+        if (null === $key) {
             $key = $name;
         }
         $this->headers[$key] = $value;
@@ -113,14 +118,14 @@ abstract class AbstractMessage implements MessageInterface
     protected function appendKey(string $name, array $value): void
     {
         $key = $this->getHeaderKey($name);
-        if(null === $key) {
+        if (null === $key) {
             $this->headers[$name] = $value;
         } else {
-            $this->headers[$key] = array_merge($this->headers[$key],$value);
+            $this->headers[$key] = array_merge($this->headers[$key], $value);
         }
     }
 
-    protected function removeKey(string $name) : void
+    protected function removeKey(string $name): void
     {
         $key = $this->getHeaderKey($name);
         if (null !== $key) {

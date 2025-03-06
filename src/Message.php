@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Implementation;
+namespace App;
+
 
 use InvalidArgumentException;
-use App\Interfaces\RequestInterface;
 use App\Interfaces\StreamInterface;
+use App\Implementation\MessageTrait;
+use App\Implementation\AbstractMessage;
 
-class Request extends AbstractMessage implements RequestInterface
+
+
+class Message extends AbstractMessage
 {
     use MessageTrait;
-   
-    public function __construct(array $headers)
-    {
-        $this->setHeaders($headers);
-    }
+
+    
 
     public function setProtocolVersion(string $protocol): void
     {
