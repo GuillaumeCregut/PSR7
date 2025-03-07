@@ -67,6 +67,12 @@ class AbstractUriTest extends TestCase
         $this->assertEquals(null, $uri->getPort());
     }
 
+    public function testGetPortBadPort()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $uri = new Uri('http://localhost:-5555555');
+    }
+
     public function testGetPortNoSchemePort()
     {
         $uri = new Uri('/');
@@ -143,7 +149,40 @@ class AbstractUriTest extends TestCase
         $this->assertEquals('user:pass@localhost', $uri->getAuthority());
     }
 //Path testing
+    public function testPathNoPath()
+    {
 
+    }
+
+    public function testPathAbsolute()
+    {
+
+    }
+
+    public function testPathRootless()
+    {
+
+    }
+
+    public function testPathWithQuery()
+    {
+
+    }
+
+    public function testPathWithSpecialChars()
+    {
+        //better for with path
+        $uri = new Uri('http://localhost/baz?#€/b%61r');
+        // // Query and fragment delimiters and multibyte chars are encoded.
+        // self::assertSame('/baz%3F%23%E2%82%AC/b%61r', $uri->getPath());
+        $this->assertEquals('/baz%3F%23%E2%82%AC/b%61r', $uri->getPath());
+    }
+
+    public function testPathStartWithTwoSlashes()
+    {
+        //http://toto.com//titi.com =>//titi.com
+        //vérifier que si pas d'host=>erreur
+    }
 
 //Query testing
 

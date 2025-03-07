@@ -34,6 +34,7 @@ abstract class AbstractUri implements UriInterface
     private string $user;
     private ?string $userPass = null;
     private string $userInfo;
+    private string $path;
 
     public function __construct(string $uri)
     {
@@ -46,7 +47,8 @@ abstract class AbstractUri implements UriInterface
         $this->port = $this->parsePort($parser['port'] ?? 0);
         $this->user = $this->parseUser($parser['user'] ?? '');
         $this->userPass = $this->parseUser($parser['pass'] ?? '');
-        $this->userInfo = $this->ParseUserInfo($this->user, $this->userPass);
+        $this->userInfo = $this->parseUserInfo($this->user, $this->userPass);
+        $this->path = $this->ParsePath($parser['path'] ?? '');
     }
 
     public function getScheme(): string
@@ -77,7 +79,7 @@ abstract class AbstractUri implements UriInterface
     public function getPath(): string
     {
         //TODO:  implement
-        return 'test';
+        return $this->path;
     }
 
     public function getQuery(): string
@@ -182,5 +184,14 @@ abstract class AbstractUri implements UriInterface
             }
             return $user . ':' . $pass;
         }
+    }
+
+    private function ParsePath(string $path): string
+    {
+        return preg_replace_callback(
+            '/(?:[^'.self::CHAR_UNRESERVED.self::CHAR_SUB_DELIMS.'%:@\/]++|%(?![A-Fa-f0-9]{2}))/',
+            [$this, 'rawurlencodeMatchZero'],
+            $path
+        );
     }
 }
