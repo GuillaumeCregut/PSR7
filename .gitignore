@@ -1,5 +1,7 @@
 /vendor/
-.phpunit.cache
+.phpunit.cache/
 /reports
 .vscode
 essai.php
+.phpdoc/
+docs/
