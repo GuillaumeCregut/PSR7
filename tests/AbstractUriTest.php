@@ -171,7 +171,7 @@ class AbstractUriTest extends TestCase
 
     public function testPathWithSpecialChars()
     {
-        //better for with path
+        //better for withPath (fonction interface)
         $uri = new Uri('http://localhost/baz?#€/b%61r');
         // // Query and fragment delimiters and multibyte chars are encoded.
         // self::assertSame('/baz%3F%23%E2%82%AC/b%61r', $uri->getPath());
